@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Garantías Constitucionales en el Perú - Infografía</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f4f6f9;
+            color: #2c3e50;
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        .infografia {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .cabecera {
+            background: linear-gradient(135deg, #c0392b 0%, #e74c3c 50%, #c0392b 100%);
+            color: white;
+            padding: 50px 40px 40px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cabecera h1 {
+            font-size: 2.8em;
+            font-weight: 800;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            position: relative;
+            z-index: 1;
+            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .cabecera .subtitulo {
+            font-size: 1.2em;
+            font-weight: 300;
+            opacity: 0.95;
+            margin-top: 10px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .cabecera .base-legal {
+            display: inline-block;
+            margin-top: 18px;
+            padding: 8px 28px;
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            border-radius: 30px;
+            font-size: 0.95em;
+            font-weight: 500;
+            position: relative;
+            z-index: 1;
+            backdrop-filter: blur(5px);
+        }
+
+        .grid-garantias {
+            display: grid;
+            grid-template-columns: 1fr;
+        }
+
+        .garantia {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            min-height: 360px;
+            border-bottom: 1px solid #e8ecf0;
+            transition: background 0.3s;
+        }
+
+        .garantia:last-child { border-bottom: none; }
+        .garantia:hover { background: #fafbfc; }
+
+        .garantia.reversa { direction: rtl; }
+        .garantia.reversa > * { direction: ltr; }
+
+        /* CLAVE: evita que una imagen grande ensanche su columna
+           y aplaste al bloque de texto */
+        .garantia > * { min-width: 0; }
+
+        .garantia-texto {
+            padding: 35px 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            min-width: 0;
+            overflow: hidden;
+        }
+
+        .numero {
+            display: inline-block;
+            width: 36px; height: 36px;
+            background: #c0392b;
+            color: white;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 36px;
+            font-weight: 700;
+            font-size: 0.85em;
+            margin-bottom: 12px;
+            box-shadow: 0 4px 12px rgba(192, 57, 43, 0.35);
+        }
+
+        .garantia-texto h2 {
+            font-size: 1.5em;
+            color: #1a252f;
+            margin-bottom: 6px;
+            font-weight: 700;
+        }
+
+        .garantia-texto .descripcion {
+            font-size: 0.92em;
+            color: #5a6c7d;
+            margin-bottom: 16px;
+            line-height: 1.5;
+        }
+
+        .caso-titulo {
+            font-size: 1.05em;
+            font-weight: 700;
+            color: #c0392b;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .caso-titulo::before {
+            content: '◆';
+            font-size: 0.6em;
+            color: #e74c3c;
+        }
+
+        .caso-descripcion {
+            font-size: 0.88em;
+            color: #4a5a6a;
+            margin-bottom: 12px;
+            line-height: 1.6;
+        }
+
+        .comentario {
+            background: #fef9e7;
+            border-left: 4px solid #f39c12;
+            padding: 12px 16px;
+            border-radius: 0 8px 8px 0;
+            margin-bottom: 16px;
+            font-size: 0.85em;
+            color: #7d6608;
+            font-style: italic;
+        }
+
+        .comentario::before {
+            content: '💬 ';
+            font-style: normal;
+        }
+
+        .enlace {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: #c0392b;
+            text-decoration: none;
+            font-size: 0.85em;
+            font-weight: 600;
+            padding: 8px 18px;
+            border: 2px solid #c0392b;
+            border-radius: 25px;
+            transition: all 0.3s;
+            align-self: flex-start;
+        }
+
+        .enlace:hover {
+            background: #c0392b;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(192, 57, 43, 0.3);
+        }
+
+        .enlace::after {
+            content: '→';
+            font-size: 1.1em;
+            transition: transform 0.3s;
+        }
+
+        .enlace:hover::after { transform: translateX(4px); }
+
+        .garantia-imagen {
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f0f2f5;
+            min-width: 0;
+            min-height: 360px;
+        }
+
+        .garantia-imagen img {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s;
+        }
+
+        .garantia:hover .garantia-imagen img {
+            transform: scale(1.05);
+        }
+
+        .pie {
+            background: #1a252f;
+            color: #a0b0c0;
+            text-align: center;
+            padding: 30px 40px;
+            font-size: 0.85em;
+        }
+
+        .pie strong { color: #e74c3c; }
+
+        @media (max-width: 820px) {
+            .garantia, .garantia.reversa {
+                grid-template-columns: 1fr;
+                direction: ltr;
+            }
+            .garantia-imagen {
+                min-height: 240px;
+                order: -1;
+            }
+            .garantia.reversa .garantia-imagen { order: -1; }
+            .garantia-texto { padding: 28px 24px; }
+            .cabecera h1 { font-size: 1.8em; }
+            .cabecera .subtitulo { font-size: 1em; }
+            .cabecera { padding: 35px 24px 30px; }
+        }
+
+        @media (max-width: 480px) {
+            body { padding: 10px; }
+            .garantia-texto { padding: 22px 18px; }
+            .garantia-texto h2 { font-size: 1.25em; }
+            .cabecera h1 { font-size: 1.4em; letter-spacing: 1px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="infografia">
+
+        <header class="cabecera">
+            <h1>Garantías Constitucionales</h1>
+            <p class="subtitulo">El Perú y sus mecanismos de defensa de la Constitución</p>
+            <span class="base-legal">Artículo 200° — Constitución Política del Perú de 1993</span>
+            <p class="subtitulo">Autor: Mendoza Gonzales, Carlos Daniel</p>
+        </header>
+
+        <div class="grid-garantias">
+
+            <!-- 1. HÁBEAS CORPUS - Caso Fujimori -->
+            <article class="garantia">
+                <div class="garantia-texto">
+                    <span class="numero">1</span>
+                    <h2>Hábeas Corpus</h2>
+                    <p class="descripcion">
+                        Protege la libertad individual y los derechos conexos cuando son vulnerados o amenazados por cualquier autoridad, funcionario o persona.
+                    </p>
+                    <div class="caso-titulo">Caso Alberto Fujimori</div>
+                    <p class="caso-descripcion">
+                        El Tribunal Constitucional aceptó un hábeas corpus que buscaba anular la resolución que suspendió el indulto concedido en 2017 a Alberto Fujimori, quien entonces cumplía 25 años de prisión por los casos Barrios Altos y La Cantuta. La decisión generó protestas masivas en Lima y otras ciudades.
+                    </p>
+                    <div class="comentario">
+                        El hábeas corpus es una herramienta seria. Usarlo para reactivar un indulto que la justicia
+                        había suspendido fue, en su momento, una decisión profundamente cuestionada por el dolor
+                        que infligió a las víctimas y a sus familias.
+                    </div>
+                    <a href="https://www.alamy.it/il-sangue-versato-non-sara-mai-dimenticato-puo-essere-letto-su-un-banner-quando-la-gente-partecipa-a-una-protesta-contro-l-indulto-dell-ex-presidente-peruviano-alberto-fujimori-con-decisione-della-corte-costituzionale-tc-che-ha-accettato-un-habeas-corpus-che-chiede-l-annullamento-di-una-risoluzione-giudiziaria-che-ha-sospeso-il-perdono-concesso-nel-2017-a-fujimori-che-sta-servendo-una-pena-di-25-anni-in-prigione-per-i-massacri-di-barrios-altos-1991-e-la-cantuta-1992-e-altri-crimini-image465122229.html" target="_blank" rel="noopener" class="enlace">Ver caso completo</a>
+                </div>
+                <div class="garantia-imagen">
+                    <img src="https://c8.alamy.com/comp/2J0M445/il-sangue-versato-non-sara-mai-dimenticato-puo-essere-letto-su-un-banner-quando-la-gente-partecipa-a-una-protesta-contro-l-indulto-dell-ex-presidente-peruviano-alberto-fujimori-con-decisione-della-corte-costituzionale-tc-che-ha-accettato-un-habeas-corpus-che-chiede-l-annullamento-di-una-risoluzione-giudiziaria-che-ha-sospeso-il-perdono-concesso-nel-2017-a-fujimori-che-sta-servendo-una-pena-di-25-anni-in-prigione-per-i-massacri-di-barrios-altos-1991-e-la-cantuta-1992-e-altri-crimini-2J0M445.jpg" alt="Protesta contra el indulto a Fujimori">
+                </div>
+            </article>
+
+            <!-- 2. ACCIÓN DE AMPARO - Esterilizaciones Forzadas -->
+            <article class="garantia reversa">
+                <div class="garantia-texto">
+                    <span class="numero">2</span>
+                    <h2>Acción de Amparo</h2>
+                    <p class="descripcion">
+                        Protege todos los derechos fundamentales distintos a la libertad individual, excepto los que tienen vías específicas como el hábeas corpus o el hábeas data.
+                    </p>
+                    <div class="caso-titulo">Esterilizaciones Forzadas</div>
+                    <p class="caso-descripcion">
+                        El Poder Judicial admitió a trámite una demanda de amparo presentada por la Asociación de Mujeres Víctimas de Esterilizaciones Forzadas de Chumbivilcas contra el Ministerio de Justicia, por omitir el reconocimiento y garantía del derecho a la reparación de las víctimas de esterilizaciones forzadas ocurridas durante el gobierno de Alberto Fujimori.
+                    </p>
+                    <div class="comentario">
+                        El amparo sirve para exigir derechos que el Estado ha ignorado. Estas mujeres llevan más de
+                        veinticinco años esperando una reparación; que la demanda siga pendiente décadas después
+                        de los hechos es una muestra de la deuda que el Estado mantiene con las víctimas.
+                    </div>
+                    <a href="https://peru21.pe/politica/esterilizaciones-forzadas-poder-judicial-admite-demanda-de-las-victimas-por-derecho-a-reparaciones-integrales-nndc-noticia/" target="_blank" rel="noopener" class="enlace">Ver caso completo</a>
+                </div>
+                <div class="garantia-imagen">
+                    <img src="https://peru21.pe/sites/default/efsfiles/styles/wide/public/2023-10/HAJAA36OVZBBFGIIPOOU754IMQ.jpg?itok=xUHmMU72" alt="Víctimas de esterilizaciones forzadas">
+                </div>
+            </article>
+
+            <!-- 3. HÁBEAS DATA - Acceso a información pública -->
+            <article class="garantia">
+                <div class="garantia-texto">
+                    <span class="numero">3</span>
+                    <h2>Hábeas Data</h2>
+                    <p class="descripcion">
+                        Protege el derecho de acceso a la información pública y el derecho a la autodeterminación informativa, permitiendo conocer, actualizar, corregir o eliminar datos personales.
+                    </p>
+                    <div class="caso-titulo">Acceso a información sobre remuneraciones y gastos de funcionarios públicos</div>
+                    <p class="caso-descripcion">
+                        El Tribunal Constitucional ha reiterado, en diversas sentencias de hábeas data, que la
+                        información sobre el uso de fondos públicos y las remuneraciones de los funcionarios del
+                        Estado no puede ser objeto de reserva arbitraria. En uno de estos casos, un ciudadano
+                        solicitó al Congreso de la República información detallada sobre bonificaciones y gastos
+                        de representación de los parlamentarios; ante la negativa, presentó una demanda de hábeas
+                        data invocando su derecho de acceso a la información pública, y el TC ordenó la entrega
+                        de lo solicitado.
+                    </p>
+                    <div class="comentario">
+                        El hábeas data no solo sirve para corregir datos personales: también es la vía para exigir
+                        que el Estado no esconda cómo gasta el dinero de todos. Es un contrapeso necesario frente
+                        a cualquier gobierno, en cualquier época.
+                    </div>
+                    <a href="https://www.gob.pe/institucion/tc/normas-legales" target="_blank" rel="noopener" class="enlace">Ver fundamentos del TC</a>
+                </div>
+                <div class="garantia-imagen">
+                    <img src="https://advocaciareis.adv.br/wp-content/uploads/2023/09/habeas-data.webp" alt="Hábeas data - acceso a la información pública">
+                </div>
+            </article>
+
+            <!-- 4. ACCIÓN DE CUMPLIMIENTO - Recuperación de Terreno -->
+            <article class="garantia reversa">
+                <div class="garantia-texto">
+                    <span class="numero">4</span>
+                    <h2>Acción de Cumplimiento</h2>
+                    <p class="descripcion">
+                        Ordena a cualquier autoridad o funcionario que cumpla con una norma legal o un acto administrativo firme, cuando es renuente a acatarlo.
+                    </p>
+                    <div class="caso-titulo">Recuperación de Terreno en Trujillo</div>
+                    <p class="caso-descripcion">
+                        El Gobierno Regional de La Libertad recuperó una hectárea en el Parque Industrial de Trujillo, valorizada en S/ 2 millones, tras un proceso judicial que se extendió desde 2008. El Poder Judicial ordenó la entrega del inmueble ocupado por Juan Dolores Namoc Medina.
+                    </p>
+                    <div class="comentario">
+                        La acción de cumplimiento hace que las órdenes judiciales se ejecuten. Aquí, después de más de 15 años, el Estado recuperó un terreno que le pertenecía.
+                    </div>
+                    <a href="http://www.regionlalibertad.gob.pe/NOTICIAS/regionales/16341-gobierno-regional-recupera-terreno-de-una-hectarea-en-parque-industrial-valorizado-en-s-2-millones" target="_blank" rel="noopener" class="enlace">Ver caso completo</a>
+                </div>
+                <div class="garantia-imagen">
+                    <img src="https://trujillolimpio.com/wp-content/uploads/2026/03/WhatsApp-Image-2026-03-27-at-9.49.29-AM.jpeg" alt="Terreno recuperado en Trujillo">
+                </div>
+            </article>
+
+            <!-- 5. ACCIÓN POPULAR - Chaleco Reflectivo -->
+            <article class="garantia">
+                <div class="garantia-texto">
+                    <span class="numero">5</span>
+                    <h2>Acción Popular</h2>
+                    <p class="descripcion">
+                        Procede por infracción de la Constitución y de la ley contra reglamentos, normas administrativas, resoluciones y decretos de carácter general, cualquiera sea la autoridad de la que emanen.
+                    </p>
+                    <div class="caso-titulo">Demanda contra la norma del Chaleco Reflectivo</div>
+                    <p class="caso-descripcion">
+                        La Asociación Hermanos Motociclistas Unidos del Perú presentó una demanda de acción popular contra la norma que obliga el uso de chalecos con placa, señalando que infringe la Constitución. La demanda fue admitida y el proceso buscó dejar sin efecto una disposición que afectaba a miles de motociclistas.
+                    </p>
+                    <div class="comentario">
+                        Cuando una norma te obliga a usar algo que consideras inconstitucional, la acción popular es el camino para cuestionarla. Aquí los motociclistas usaron esa herramienta.
+                    </div>
+                    <a href="https://rpp.pe/lima/actualidad/gremio-de-motociclistas-presento-demanda-judicial-para-anular-norma-que-obliga-uso-de-chaleco-con-placa-noticia-1630667" target="_blank" rel="noopener" class="enlace">Ver caso completo</a>
+                </div>
+                <div class="garantia-imagen">
+                    <img src="https://tse1.mm.bing.net/th/id/OIP.TuL44eiIfkBfz8HPkT_xVQHaJQ?r=0&rs=1&pid=ImgDetMain&o=7&rm=3" alt="Motociclistas protestando contra la norma del chaleco">
+                </div>
+            </article>
+
+            <!-- 6. ACCIÓN DE INCONSTITUCIONALIDAD - Ley de Cuestión de Confianza -->
+            <article class="garantia reversa">
+                <div class="garantia-texto">
+                    <span class="numero">6</span>
+                    <h2>Acción de Inconstitucionalidad</h2>
+                    <p class="descripcion">
+                        Procede contra las normas que tienen rango de ley: leyes, decretos legislativos, decretos de urgencia, tratados, reglamentos del Congreso y normas regionales de carácter general que contravengan la Constitución.
+                    </p>
+                    <div class="caso-titulo">Demanda contra la Ley de Cuestión de Confianza</div>
+                    <p class="caso-descripcion">
+                        El Gobierno de ese entonces presentó una demanda de inconstitucionalidad contra la Ley 31355, que restringe el uso de la cuestión de confianza que pueden presentar los ministros. El procurador público en materia constitucional argumentó que la norma vulneraba atribuciones del Poder Ejecutivo.
+                    </p>
+                    <div class="comentario">
+                        Una ley no puede vaciar de contenido una facultad constitucional. El pulso entre Ejecutivo y
+                        Congreso por la cuestión de confianza es un conflicto recurrente en la política peruana; esta
+                        demanda, presentada por el gobierno de aquel periodo, es un ejemplo de cómo el TC termina
+                        decidiendo los límites entre ambos poderes.
+                    </div>
+                    <a href="https://peru21.pe/politica/gobierno-presento-demanda-de-inconstitucionalidad-contra-ley-que-regula-cuestion-de-confianza-tc-nndc-noticia/" target="_blank" rel="noopener" class="enlace">Ver caso completo</a>
+                </div>
+                <div class="garantia-imagen">
+                    <img src="https://peru21.pe/sites/default/efsfiles/styles/wide/public/2023-10/6AFBEUEMXZH27MLCLD4UH42DYY.jpg?itok=r_K0eDae" alt="Presentación de demanda de inconstitucionalidad">
+                </div>
+            </article>
+
+            <!-- 7. CONFLICTO COMPETENCIAL - MML vs JNE -->
+            <article class="garantia">
+                <div class="garantia-texto">
+                    <span class="numero">7</span>
+                    <h2>Conflicto Competencial</h2>
+                    <p class="descripcion">
+                        Resuelve los conflictos que se suscitan entre entidades del Estado sobre sus competencias o atribuciones establecidas en la Constitución, como entre el Poder Ejecutivo, el Congreso, el Poder Judicial y organismos constitucionales autónomos.
+                    </p>
+                    <div class="caso-titulo">Municipalidad de Lima vs. JNE</div>
+                    <p class="caso-descripcion">
+                        En abril de 2026, el Concejo Metropolitano de Lima aprobó interponer una demanda de conflicto
+                        competencial contra el Jurado Nacional de Elecciones ante el Tribunal Constitucional, por
+                        presunto menoscabo de atribuciones constitucionales al declarar inviable la realización de
+                        elecciones complementarias en Lima.
+                    </p>
+                    <div class="comentario">
+                        Cuando dos instituciones del Estado se pelean por quién manda, el Tribunal Constitucional decide. Aquí la Municipalidad de Lima acudió al TC para que defina si el JNE se excedió en sus funciones.
+                    </div>
+                    <a href="https://peru21.pe/politica/concejo-de-lima-aprueba-demanda-contra-el-jne-ante-el-tc-por-conflicto-de-competencias/" target="_blank" rel="noopener" class="enlace">Ver caso completo</a>
+                </div>
+                <div class="garantia-imagen">
+                    <img src="https://peru21.pe/sites/default/efsfiles/styles/wide/public/2026-04/whatsapp-image-2026-04-30-at-8.54.01-pm.jpeg?itok=ijqwoRRk" alt="Renzo Reggiardo anunciando demanda competencial">
+                </div>
+            </article>
+
+        </div>
+
+        <footer class="pie">
+            <p><strong>Artículo 200°</strong> — Constitución Política del Perú de 1993 · <strong>Nuevo Código Procesal Constitucional</strong> (Ley 31307)</p>
+            <p style="margin-top: 8px; font-size: 0.9em;">Experiencia curricular: Constitución y DD.HH.</p>
+        </footer>
+
+    </div>
+
+</body>
+</html>
