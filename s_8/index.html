@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Para ti - TikTok Style</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  html, body {
+    height: 100%; background: #000; color: #fff; overflow: hidden;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  }
+
+  /* ===== Marco tipo teléfono en escritorio ===== */
+  .phone { position: relative; width: 100%; height: 100dvh; overflow: hidden; background: #000; }
+  @media (min-width: 600px) {
+    body { display: flex; justify-content: center; align-items: center; background: #0a0a0a; }
+    .phone {
+      width: 400px; height: 92vh; max-height: 880px;
+      border-radius: 32px; overflow: hidden;
+      box-shadow: 0 20px 60px rgba(0,0,0,.7), 0 0 0 8px #1a1a1a;
+    }
+  }
+
+  /* ===== Feed ===== */
+  .video-feed {
+    position: absolute; inset: 0; overflow-y: scroll;
+    scroll-snap-type: y mandatory; scrollbar-width: none; -ms-overflow-style: none;
+  }
+  .video-feed::-webkit-scrollbar { display: none; }
+
+  .video-container {
+    position: relative; height: 100%; scroll-snap-align: start;
+    scroll-snap-stop: always; background: #000; overflow: hidden;
+  }
+
+  /* ===== IFRAME DE DRIVE (Ajustado para que no sea gigante) ===== */
+  .video-container iframe {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    height: 100%;
+    border: 0;
+    /* Un zoom más suave para que la interfaz no se vea tan enorme */
+    transform: translate(-50%, -50%) scale(1.4);
+    pointer-events: auto;
+  }
+
+  /* Degradados para legibilidad */
+  .video-container::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 120px;
+    background: linear-gradient(to bottom, rgba(0,0,0,.6), transparent);
+    z-index: 2; pointer-events: none;
+  }
+  .video-container::after {
+    content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 240px;
+    background: linear-gradient(to top, rgba(0,0,0,.88), transparent);
+    z-index: 2; pointer-events: none;
+  }
+
+  /* ===== Barra superior ===== */
+  .top-bar {
+    position: absolute; top: 0; left: 0; right: 0;
+    padding: 16px 16px 12px; display: flex; justify-content: center;
+    align-items: center; z-index: 10; pointer-events: none;
+  }
+  .top-bar > * { pointer-events: auto; }
+  .tabs { display: flex; gap: 22px; align-items: center; }
+  .tab {
+    background: none; border: none; color: rgba(255,255,255,.65);
+    font-size: 16px; font-weight: 600; cursor: pointer; padding: 4px 0;
+    position: relative; text-shadow: 0 1px 3px rgba(0,0,0,.4);
+    transition: color .2s;
+  }
+  .tab.active { color: #fff; }
+  .tab.active::after {
+    content: ''; position: absolute; bottom: -6px; left: 50%;
+    transform: translateX(-50%); width: 24px; height: 2px;
+    background: #fff; border-radius: 2px;
+  }
+
+  /* ===== Sidebar derecha ===== */
+  .right-sidebar {
+    position: absolute; right: 6px; bottom: 100px;
+    display: flex; flex-direction: column; align-items: center;
+    gap: 16px; z-index: 5;
+  }
+  .avatar-wrap { position: relative; margin-bottom: 8px; }
+  .avatar {
+    width: 46px; height: 46px; border-radius: 50%;
+    background: linear-gradient(135deg, #FE2C55, #25F4EE);
+    border: 2px solid #fff; display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 18px; color: #fff;
+    box-shadow: 0 2px 8px rgba(0,0,0,.4);
+  }
+  .follow-btn {
+    position: absolute; bottom: -9px; left: 50%; transform: translateX(-50%);
+    width: 20px; height: 20px; border-radius: 50%; background: #FE2C55;
+    border: none; color: #fff; font-size: 16px; font-weight: 700;
+    line-height: 1; cursor: pointer; display: flex; align-items: center;
+    justify-content: center; padding-bottom: 2px; transition: all .2s;
+  }
+  .follow-btn.following { background: #fff; color: #000; }
+
+  .action { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+  .action-btn {
+    background: none; border: none; color: #fff; cursor: pointer;
+    width: 44px; height: 44px; display: flex; align-items: center; justify-content: center;
+    filter: drop-shadow(0 1px 3px rgba(0,0,0,.5)); transition: transform .15s;
+  }
+  .action-btn svg { width: 34px; height: 34px; }
+  .action-btn:active { transform: scale(.9); }
+
+  .like-btn.liked { color: #FE2C55; }
+  .like-btn.liked svg { animation: likePop .35s ease; }
+  @keyframes likePop {
+    0% { transform: scale(1); } 40% { transform: scale(1.4); }
+    70% { transform: scale(.9); } 100% { transform: scale(1); }
+  }
+  .count {
+    color: #fff; font-size: 12px; font-weight: 600;
+    text-shadow: 0 1px 2px rgba(0,0,0,.6);
+  }
+
+  /* Disco de música */
+  .music-disc {
+    width: 46px; height: 46px; border-radius: 50%;
+    background: radial-gradient(circle at center, #444 0%, #111 70%);
+    border: 8px solid #2a2a2a; display: flex; align-items: center;
+    justify-content: center; color: #fff; margin-top: 8px;
+    animation: spin 6s linear infinite;
+    box-shadow: 0 2px 8px rgba(0,0,0,.5); position: relative;
+  }
+  .music-disc::before {
+    content: ''; position: absolute; inset: 5px; border-radius: 50%;
+    background: linear-gradient(135deg, #FE2C55, #25F4EE); opacity: .7;
+  }
+  .music-disc svg {
+    position: relative; width: 16px; height: 16px; z-index: 1;
+    filter: drop-shadow(0 1px 2px rgba(0,0,0,.5));
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ===== Info inferior ===== */
+  .bottom-info {
+    position: absolute; left: 12px; right: 84px; bottom: 68px;
+    z-index: 5; color: #fff;
+  }
+  .username {
+    font-size: 17px; font-weight: 700; margin-bottom: 6px;
+    text-shadow: 0 1px 3px rgba(0,0,0,.6);
+  }
+  .description {
+    font-size: 14px; line-height: 1.4; margin-bottom: 8px;
+    text-shadow: 0 1px 3px rgba(0,0,0,.6);
+  }
+  .description strong { font-weight: 700; color: #fff; }
+  .music-info {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 13px; color: rgba(255,255,255,.9);
+  }
+  .music-info svg { width: 14px; height: 14px; flex-shrink: 0; }
+  .marquee { overflow: hidden; width: 170px; height: 18px; position: relative; }
+  .marquee-content {
+    display: flex; animation: marquee 10s linear infinite; white-space: nowrap;
+  }
+  .marquee-content span { padding-right: 24px; }
+  @keyframes marquee {
+    from { transform: translateX(0); } to { transform: translateX(-50%); }
+  }
+
+  /* ===== Navegación inferior ===== */
+  .bottom-nav {
+    position: absolute; bottom: 0; left: 0; right: 0; height: 56px;
+    background: #000; border-top: 1px solid rgba(255,255,255,.08);
+    display: flex; align-items: center; justify-content: space-around;
+    z-index: 10; padding-bottom: env(safe-area-inset-bottom, 0);
+  }
+  .nav-item {
+    background: none; border: none; color: rgba(255,255,255,.5); cursor: pointer;
+    display: flex; flex-direction: column; align-items: center; gap: 2px;
+    font-size: 10px; font-weight: 500; padding: 4px 12px;
+  }
+  .nav-item svg { width: 22px; height: 22px; }
+  .nav-item.active { color: #fff; }
+
+  .create-btn {
+    position: relative; width: 44px; height: 28px; background: #fff;
+    border: none; border-radius: 8px; cursor: pointer; flex-shrink: 0;
+  }
+  .create-btn::before {
+    content: ''; position: absolute; top: 50%; left: 50%;
+    transform: translate(-50%, -50%); width: 14px; height: 2px;
+    background: #000; border-radius: 2px;
+  }
+  .create-btn::after {
+    content: ''; position: absolute; top: 50%; left: 50%;
+    transform: translate(-50%, -50%); width: 2px; height: 14px;
+    background: #000; border-radius: 2px;
+  }
+
+  /* ===== Corazón flotante ===== */
+  .heart-pop {
+    position: absolute; width: 80px; height: 80px; color: #FE2C55;
+    pointer-events: none; transform: translate(-50%, -50%); z-index: 20;
+    filter: drop-shadow(0 2px 8px rgba(0,0,0,.4));
+    animation: heartFloat 1s ease-out forwards;
+  }
+  .heart-pop svg { width: 100%; height: 100%; }
+  @keyframes heartFloat {
+    0%   { transform: translate(-50%, -50%) scale(0) rotate(-20deg); opacity: 0; }
+    25%  { transform: translate(-50%, -50%) scale(1.2) rotate(0deg); opacity: 1; }
+    60%  { transform: translate(-50%, -80%) scale(1) rotate(10deg); opacity: .9; }
+    100% { transform: translate(-50%, -140%) scale(.8) rotate(20deg); opacity: 0; }
+  }
+</style>
+</head>
+<body>
+
+<div class="phone">
+  <header class="top-bar">
+    <div class="tabs">
+      <button class="tab">Siguiendo</button>
+      <button class="tab active">Para ti</button>
+    </div>
+  </header>
+
+  <div class="video-feed" id="feed">
+    <div class="video-container">
+      
+      <!-- IFRAME OFICIAL DE GOOGLE DRIVE -->
+      <iframe
+        src="https://drive.google.com/file/d/1AcyLHpvP3Qqfj7YDjq94P8nuiCQWXbAk/preview"
+        allow="autoplay; encrypted-media; fullscreen"
+        allowfullscreen
+        title="Video">
+      </iframe>
+
+      <div class="right-sidebar">
+        <div class="avatar-wrap">
+          <div class="avatar">U</div>
+          <button class="follow-btn" aria-label="Seguir">+</button>
+        </div>
+
+        <div class="action">
+          <button class="action-btn like-btn" data-count="12400" aria-label="Me gusta">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+          </button>
+          <span class="count">12.4K</span>
+        </div>
+
+        <div class="action">
+          <button class="action-btn comment-btn" aria-label="Comentarios">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>
+          </button>
+          <span class="count">2</span>
+        </div>
+
+        <div class="action">
+          <button class="action-btn share-btn" aria-label="Compartir">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M14 9V5l7 7-7 7v-4.1c-5 0-8.5 1.6-11 5.1 1-5 4-10 11-11z"/></svg>
+          </button>
+          <span class="count">1</span>
+        </div>
+
+        <div class="music-disc">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg>
+        </div>
+      </div>
+
+      <div class="bottom-info">
+        <div class="username">@nombre_usuario</div>
+        <div class="description">
+          Mira este video increíble 🤩 <strong>#parati</strong> <strong>#fyp</strong> <strong>#viral</strong>
+        </div>
+        <div class="music-info">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg>
+          <div class="marquee">
+            <div class="marquee-content">
+              <span>Nombre de la canción · Artista</span>
+              <span>Nombre de la canción · Artista</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <nav class="bottom-nav">
+    <button class="nav-item active">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+      Inicio
+    </button>
+    <button class="nav-item">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+      Descubrir
+    </button>
+    <button class="create-btn" aria-label="Crear"></button>
+    <button class="nav-item">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>
+      Bandeja
+    </button>
+    <button class="nav-item">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+      Perfil
+    </button>
+  </nav>
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  const containers = document.querySelectorAll('.video-container');
+
+  /* Helpers de conteo */
+  function formatCount(n) {
+    if (n >= 1000000) return (n / 1000000).toFixed(1).replace(/\.0$/, '') + 'M';
+    if (n >= 1000)    return (n / 1000).toFixed(1).replace(/\.0$/, '') + 'K';
+    return String(n);
+  }
+  function bumpCount(btn, countEl, delta) {
+    const current = parseInt(btn.dataset.count, 10) || 0;
+    const next = Math.max(0, current + delta);
+    btn.dataset.count = next;
+    countEl.textContent = formatCount(next);
+  }
+
+  /* Like */
+  containers.forEach(container => {
+    const btn = container.querySelector('.like-btn');
+    const countEl = btn.parentElement.querySelector('.count');
+
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const liked = !btn.classList.contains('liked');
+      btn.classList.toggle('liked', liked);
+      bumpCount(btn, countEl, liked ? 1 : -1);
+
+      if (liked) {
+        spawnHeart(container, {
+          clientX: container.getBoundingClientRect().left + container.offsetWidth / 2,
+          clientY: container.getBoundingClientRect().top + container.offsetHeight / 2
+        });
+      }
+    });
+  });
+
+  /* Follow */
+  containers.forEach(container => {
+    const btn = container.querySelector('.follow-btn');
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      btn.classList.toggle('following');
+      btn.textContent = btn.classList.contains('following') ? '✓' : '+';
+    });
+  });
+
+  /* Corazón flotante */
+  function spawnHeart(container, e) {
+    const rect = container.getBoundingClientRect();
+    const x = (e.clientX || rect.width / 2) - rect.left;
+    const y = (e.clientY || rect.height / 2) - rect.top;
+
+    const heart = document.createElement('div');
+    heart.className = 'heart-pop';
+    heart.innerHTML = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>';
+    heart.style.left = x + 'px';
+    heart.style.top = y + 'px';
+    container.appendChild(heart);
+    setTimeout(() => heart.remove(), 1000);
+  }
+})();
+</script>
+
+</body>
+</html>
